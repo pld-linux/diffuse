@@ -1,0 +1,320 @@
+diff -urN Diffuse-4.1b/discus/prog/Makefile Diffuse-4.1b.patch/discus/prog/Makefile
+--- Diffuse-4.1b/discus/prog/Makefile	Tue Mar 13 23:31:27 2001
++++ Diffuse-4.1b.patch/discus/prog/Makefile	Wed Dec 18 17:12:25 2002
+@@ -15,7 +15,9 @@
+ 
+ # Where to install the binary and help file and a backup location
+ 
+-BINDIR  = /usr/local/bin
++prefix = /usr
++BINDIR = $(prefix)/bin
++DATADIR = $(prefix)/share
+ BACKDIR = $(HOME)/linux/backup/
+ 
+ # Your compiler name and install program
+@@ -150,22 +152,25 @@
+ install: discus appl_dis.hlp lib_f77.hlp color.map
+ 	rm -f discus.hlp
+ 	cat appl_dis.hlp lib_f77.hlp > discus.hlp
+-	cp discus     $(BINDIR)/
+-	cp discus.hlp $(BINDIR)/
+-	cp color.map  $(BINDIR)/
+-	chmod $(BMOD) $(BINDIR)/discus
+-	chmod $(FMOD) $(BINDIR)/discus.hlp
+-	chmod $(FMOD) $(BINDIR)/color.map
+-	if [ ! -d "$(BINDIR)/mac/" ] ; then \
+-	  mkdir $(BINDIR)/mac/; chmod $(BMOD) $(BINDIR)/mac/; \
+-	fi
+-	if [ ! -d "$(BINDIR)/mac/discus" ] ; then \
+-	  mkdir -m $(BMOD) $(BINDIR)/mac/discus; \
+-	  chmod $(BMOD) $(BINDIR)/mac/discus;\
+-	fi
++	install -d $(DESTDIR)$(BINDIR)
++	install -d $(DESTDIR)$(DATADIR)/diffuse
++	install -d $(DESTDIR)$(DATADIR)/diffuse/mac/discus
++	cp discus     $(DESTDIR)$(BINDIR)/
++	cp discus.hlp $(DESTDIR)$(DATADIR)/diffuse
++	cp color.map  $(DESTDIR)$(DATADIR)/diffuse
++#	chmod $(BMOD) $(BINDIR)/discus
++#	chmod $(FMOD) $(BINDIR)/discus.hlp
++#	chmod $(FMOD) $(BINDIR)/color.map
++#	if [ ! -d "$(BINDIR)/mac/" ] ; then \
++#	  mkdir $(BINDIR)/mac/; chmod $(BMOD) $(BINDIR)/mac/; \
++#	fi
++#	if [ ! -d "$(BINDIR)/mac/discus" ] ; then \
++#	  mkdir -m $(BMOD) $(BINDIR)/mac/discus; \
++#	  chmod $(BMOD) $(BINDIR)/mac/discus;\
++#	fi
+ 	cd sysmac; for i in *.mac ; do \
+-	  (cp $$i $(BINDIR)/mac/discus/; \
+-	  chmod $(FMOD) $(BINDIR)/mac/discus/$$i;) \
++	  cp $$i $(DESTDIR)$(DATADIR)/diffuse/mac/discus/; \
++#	  chmod $(FMOD) $(BINDIR)/mac/discus/$$i;)
+ 	done
+ 
+ backup: *.f sys_*cc.c read*.c *.inc *.cmm *.hlp *.map *ake* CHANGES.*
+diff -urN Diffuse-4.1b/discus/prog/appl_unix.f Diffuse-4.1b.patch/discus/prog/appl_unix.f
+--- Diffuse-4.1b/discus/prog/appl_unix.f	Tue Mar 13 23:31:33 2001
++++ Diffuse-4.1b.patch/discus/prog/appl_unix.f	Wed Dec 18 16:51:53 2002
+@@ -33,16 +33,13 @@
+ 	call getenv('HOME',home_dir)
+ 	home_dir_l = len_str(home_dir)
+ c
+-        appl_dir = ' '
+-	call getenv(pname_cap,appl_dir)
+-	if(appl_dir.eq.' ') then
+-	  appl_dir = '.'
+-	endif
+-	appl_dir_l = len_str(appl_dir)
+-c
+ 	deffile    = '.'//pname
+ 	deffile_l  = len_str(deffile)
+ c
++        appl_dir = ' '
++        appl_dir_l = len_str('/usr/share/diffuse/')
++        appl_dir(1:appl_dir_l) = '/usr/share/diffuse/'
++c
+         mac_dir    = ' '
+ 	mac_dir(1:appl_dir_l) = appl_dir
+ 	mac_dir(appl_dir_l+1:appl_dir_l+len_str(pname)+6) = 
+@@ -64,6 +61,13 @@
+ 	colorfile(appl_dir_l+1:appl_dir_l+10) = '/color.map'
+ 	colorfile_l  = len_str(colorfile)
+ c
++        appl_dir = ' '
++	call getenv(pname_cap,appl_dir)
++	if(appl_dir.eq.' ') then
++	  appl_dir = '.'
++	endif
++	appl_dir_l = len_str(appl_dir)
++c
+ 	write(*,1000) umac_dir(1:umac_dir_l)
+ 	write(*,1100) mac_dir(1:mac_dir_l)
+ c
+diff -urN Diffuse-4.1b/kuplot/prog/Makefile Diffuse-4.1b.patch/kuplot/prog/Makefile
+--- Diffuse-4.1b/kuplot/prog/Makefile	Sat Mar 31 07:34:31 2001
++++ Diffuse-4.1b.patch/kuplot/prog/Makefile	Wed Dec 18 17:16:08 2002
+@@ -15,7 +15,9 @@
+ 
+ # Where to install the binary and help file and a backup location
+ 
+-BINDIR  = /usr/local/bin
++prefix=/usr
++BINDIR  = $(prefix)/bin
++DATADIR = $(prefix)/share
+ BACKDIR = $(HOME)/linux/backup
+ 
+ # Your compiler names and install program
+@@ -48,7 +50,7 @@
+ 
+ CFLAGS  = -DREADLINE -w
+ FFLAGS  = -O -malign-double
+-LDFLAGS = -L$(PGLIB) -L/usr/X11R6/lib -lpgplot -lX11 -lm
++LDFLAGS = -L/usr/X11R6/lib -lpgplot -lX11 -lm
+ SYSOBJ  = appl_unix.o sys_g77.o
+ 
+ # ================================================================
+@@ -126,22 +128,25 @@
+ 	rm -f kuplot $(OBJ) 
+ 
+ install: kuplot appl_kup.hlp lib_f77.hlp
++	install -d $(DESTDIR)$(BINDIR)
++	install -d $(DESTDIR)$(DATADIR)/diffuse
++	install -d $(DESTDIR)$(DATADIR)/mac/kuplot
+ 	rm -f kuplot.hlp
+ 	cat appl_kup.hlp lib_f77.hlp > kuplot.hlp
+-	cp kuplot     $(BINDIR)/
+-	cp kuplot.hlp $(BINDIR)/
+-	chmod $(BMOD) $(BINDIR)/kuplot
+-	chmod $(FMOD) $(BINDIR)/kuplot.hlp
+-	if [ ! -d "$(BINDIR)/mac/" ] ; then \
+-	  mkdir $(BINDIR)/mac/; chmod $(BMOD) $(BINDIR)/mac/; \
+-	fi
+-	if [ ! -d "$(BINDIR)/mac/kuplot" ] ; then \
+-	  mkdir -m $(BMOD) $(BINDIR)/mac/kuplot; \
+-	  chmod $(BMOD) $(BINDIR)/mac/kuplot;\
+-	fi
++	cp kuplot     $(DESTDIR)$(BINDIR)/
++	cp kuplot.hlp $(DESTDIR)$(DATADIR)/diffuse
++#	chmod $(BMOD) $(BINDIR)/kuplot
++#	chmod $(FMOD) $(BINDIR)/kuplot.hlp
++#	if [ ! -d "$(BINDIR)/mac/" ] ; then \
++#	  mkdir $(BINDIR)/mac/; chmod $(BMOD) $(BINDIR)/mac/; \
++#	fi
++#	if [ ! -d "$(BINDIR)/mac/kuplot" ] ; then \
++#	  mkdir -m $(BMOD) $(BINDIR)/mac/kuplot; \
++#	  chmod $(BMOD) $(BINDIR)/mac/kuplot;\
++#	fi
+ 	cd sysmac; for i in *.mac ; do \
+-	  (cp $$i $(BINDIR)/mac/kuplot/; \
+-	  chmod $(FMOD) $(BINDIR)/mac/kuplot/$$i;) \
++	  cp $$i $(DESTDIR)$(DATADIR)/mac/kuplot/; \
++#	  chmod $(FMOD) $(BINDIR)/mac/kuplot/$$i;) 
+ 	done
+ 
+ backup: 
+diff -urN Diffuse-4.1b/kuplot/prog/appl_unix.f Diffuse-4.1b.patch/kuplot/prog/appl_unix.f
+--- Diffuse-4.1b/kuplot/prog/appl_unix.f	Tue Mar 13 23:31:33 2001
++++ Diffuse-4.1b.patch/kuplot/prog/appl_unix.f	Wed Dec 18 16:51:53 2002
+@@ -33,16 +33,13 @@
+ 	call getenv('HOME',home_dir)
+ 	home_dir_l = len_str(home_dir)
+ c
+-        appl_dir = ' '
+-	call getenv(pname_cap,appl_dir)
+-	if(appl_dir.eq.' ') then
+-	  appl_dir = '.'
+-	endif
+-	appl_dir_l = len_str(appl_dir)
+-c
+ 	deffile    = '.'//pname
+ 	deffile_l  = len_str(deffile)
+ c
++        appl_dir = ' '
++        appl_dir_l = len_str('/usr/share/diffuse/')
++        appl_dir(1:appl_dir_l) = '/usr/share/diffuse/'
++c
+         mac_dir    = ' '
+ 	mac_dir(1:appl_dir_l) = appl_dir
+ 	mac_dir(appl_dir_l+1:appl_dir_l+len_str(pname)+6) = 
+@@ -64,6 +61,13 @@
+ 	colorfile(appl_dir_l+1:appl_dir_l+10) = '/color.map'
+ 	colorfile_l  = len_str(colorfile)
+ c
++        appl_dir = ' '
++	call getenv(pname_cap,appl_dir)
++	if(appl_dir.eq.' ') then
++	  appl_dir = '.'
++	endif
++	appl_dir_l = len_str(appl_dir)
++c
+ 	write(*,1000) umac_dir(1:umac_dir_l)
+ 	write(*,1100) mac_dir(1:mac_dir_l)
+ c
+diff -urN Diffuse-4.1b/lib_f77/appl_unix.f Diffuse-4.1b.patch/lib_f77/appl_unix.f
+--- Diffuse-4.1b/lib_f77/appl_unix.f	Tue Mar 13 23:31:33 2001
++++ Diffuse-4.1b.patch/lib_f77/appl_unix.f	Wed Dec 18 16:51:53 2002
+@@ -33,16 +33,13 @@
+ 	call getenv('HOME',home_dir)
+ 	home_dir_l = len_str(home_dir)
+ c
+-        appl_dir = ' '
+-	call getenv(pname_cap,appl_dir)
+-	if(appl_dir.eq.' ') then
+-	  appl_dir = '.'
+-	endif
+-	appl_dir_l = len_str(appl_dir)
+-c
+ 	deffile    = '.'//pname
+ 	deffile_l  = len_str(deffile)
+ c
++        appl_dir = ' '
++        appl_dir_l = len_str('/usr/share/diffuse/')
++        appl_dir(1:appl_dir_l) = '/usr/share/diffuse/'
++c
+         mac_dir    = ' '
+ 	mac_dir(1:appl_dir_l) = appl_dir
+ 	mac_dir(appl_dir_l+1:appl_dir_l+len_str(pname)+6) = 
+@@ -64,6 +61,13 @@
+ 	colorfile(appl_dir_l+1:appl_dir_l+10) = '/color.map'
+ 	colorfile_l  = len_str(colorfile)
+ c
++        appl_dir = ' '
++	call getenv(pname_cap,appl_dir)
++	if(appl_dir.eq.' ') then
++	  appl_dir = '.'
++	endif
++	appl_dir_l = len_str(appl_dir)
++c
+ 	write(*,1000) umac_dir(1:umac_dir_l)
+ 	write(*,1100) mac_dir(1:mac_dir_l)
+ c
+diff -urN Diffuse-4.1b/pdffit/prog/Makefile Diffuse-4.1b.patch/pdffit/prog/Makefile
+--- Diffuse-4.1b/pdffit/prog/Makefile	Tue Mar 13 23:31:35 2001
++++ Diffuse-4.1b.patch/pdffit/prog/Makefile	Wed Dec 18 17:15:15 2002
+@@ -14,7 +14,9 @@
+ 
+ # Where to install the binary and help file and a backup location
+ 
+-BINDIR  = /usr/local/bin
++prefix=/usr
++BINDIR  = $(prefix)/bin
++DATADIR = $(prefix)/share
+ BACKDIR = $(HOME)/linux/backup
+ 
+ # Your compiler names
+@@ -146,20 +148,23 @@
+ install: pdffit appl_pdf.hlp lib_f77.hlp
+ 	rm -f pdffit.hlp
+ 	cat appl_pdf.hlp lib_f77.hlp > pdffit.hlp
+-	cp pdffit     $(BINDIR)/
+-	cp pdffit.hlp $(BINDIR)/
+-	chmod $(BMOD) $(BINDIR)/pdffit
+-	chmod $(FMOD) $(BINDIR)/pdffit.hlp
+-	if [ ! -d "$(BINDIR)/mac/" ] ; then \
+-	  mkdir $(BINDIR)/mac/; chmod $(BMOD) $(BINDIR)/mac/; \
+-	fi
+-	if [ ! -d "$(BINDIR)/mac/pdffit" ] ; then \
+-	  mkdir -m $(BMOD) $(BINDIR)/mac/pdffit; \
+-	  chmod $(BMOD) $(BINDIR)/mac/pdffit;\
+-	fi
++	install -d $(DESTDIR)$(BINDIR)
++	install -d $(DESTDIR)$(DATADIR)/diffuse
++	install -d $(DESTDIR)$(DATADIR)/diffuse/mac/pdffit/
++	cp pdffit     $(DESTDIR)$(BINDIR)/
++	cp pdffit.hlp $(DESTDIR)$(DATADIR)/diffuse
++#	chmod $(BMOD) $(DESTDIR)$(BINDIR)/pdffit
++#	chmod $(FMOD) $(DESTDIR)$(BINDIR)/pdffit.hlp
++#	if [ ! -d "$(BINDIR)/mac/" ] ; then \
++#	  mkdir $(BINDIR)/mac/; chmod $(BMOD) $(BINDIR)/mac/; \
++#	fi
++#	if [ ! -d "$(BINDIR)/mac/pdffit" ] ; then \
++#	  mkdir -m $(BMOD) $(BINDIR)/mac/pdffit; \
++#	  chmod $(BMOD) $(BINDIR)/mac/pdffit;\
++#	fi
+ 	cd sysmac; for i in *.mac ; do \
+-	  (cp $$i $(BINDIR)/mac/pdffit/; \
+-	   chmod $(FMOD) $(BINDIR)/mac/pdffit/$$i;) \
++	  (cp $$i $(DESTDIR)$(DATADIR)/diffuse/mac/pdffit/; \
++#	   chmod $(FMOD) $(BINDIR)/mac/pdffit/$$i;) 
+ 	done
+ 
+ 
+diff -urN Diffuse-4.1b/pdffit/prog/appl_unix.f Diffuse-4.1b.patch/pdffit/prog/appl_unix.f
+--- Diffuse-4.1b/pdffit/prog/appl_unix.f	Tue Mar 13 23:31:33 2001
++++ Diffuse-4.1b.patch/pdffit/prog/appl_unix.f	Wed Dec 18 16:51:53 2002
+@@ -33,16 +33,13 @@
+ 	call getenv('HOME',home_dir)
+ 	home_dir_l = len_str(home_dir)
+ c
+-        appl_dir = ' '
+-	call getenv(pname_cap,appl_dir)
+-	if(appl_dir.eq.' ') then
+-	  appl_dir = '.'
+-	endif
+-	appl_dir_l = len_str(appl_dir)
+-c
+ 	deffile    = '.'//pname
+ 	deffile_l  = len_str(deffile)
+ c
++        appl_dir = ' '
++        appl_dir_l = len_str('/usr/share/diffuse/')
++        appl_dir(1:appl_dir_l) = '/usr/share/diffuse/'
++c
+         mac_dir    = ' '
+ 	mac_dir(1:appl_dir_l) = appl_dir
+ 	mac_dir(appl_dir_l+1:appl_dir_l+len_str(pname)+6) = 
+@@ -64,6 +61,13 @@
+ 	colorfile(appl_dir_l+1:appl_dir_l+10) = '/color.map'
+ 	colorfile_l  = len_str(colorfile)
+ c
++        appl_dir = ' '
++	call getenv(pname_cap,appl_dir)
++	if(appl_dir.eq.' ') then
++	  appl_dir = '.'
++	endif
++	appl_dir_l = len_str(appl_dir)
++c
+ 	write(*,1000) umac_dir(1:umac_dir_l)
+ 	write(*,1100) mac_dir(1:mac_dir_l)
+ c
