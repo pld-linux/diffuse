@@ -1,4 +1,5 @@
-Summary:	No summary
+Summary:	'Diffuse program' collection
+Summary(pl):	Zestaw 'programów dyfuzji'
 Name:		diffuse
 Version:	4.1b
 Release:	1
@@ -14,6 +15,24 @@ BuildRequires:	readline-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
+'Diffuse program' collection contains the following programs:
+- DISCUS - Diffuse Scattering & Defect Structure Simulation
+%if 0
+- PDFFIT - Full Profile Refinement of structural model of the Atomic
+           Pair Distribution Function
+- KUPLOT - General plotting program (well suited for DISCUS and PDFFIT
+           results)
+%endif
+
+%description -l pl
+Zestaw 'programów dyfuzji' zawiera nastêpuj±ce programy:
+- DISCUS - Rozpraszanie dyfuzyjne i symulacja uszkodzonej struktury
+%if 0
+- PDFFIT - Full Profile Refinement of structural model of the Atomic
+           Pair Distribution Function
+- KUPLOT - Program do rysowania (dobrze dopasowany do formatu wyników
+           DISCUS i PDFFIT)
+%endif
 
 %package common
 Summary:	Common files for diffuse package
