@@ -56,13 +56,14 @@ narzêdzie do nauki fizyki dyfrakcyjnej.
 %patch0 -p1
 
 %build
-cd discus/prog
-%{__make} CFLAGS="-DREADLINE %{rpmcflags}"
-cd ../../kuplot/prog
-%{__make} CFLAGS="-DREADLINE %{rpmcflags}"
-cd ../../pdffit/prog
-%{__make} CFLAGS="-DREADLINE %{rpmcflags}"
-cd ../tools
+%{__make} -C discus/prog \
+	CFLAGS="-DREADLINE %{rpmcflags}"
+%{__make} -C kuplot/prog \
+	CFLAGS="-DREADLINE %{rpmcflags}"
+%{__make} -C pdffit/prog \
+	CFLAGS="-DREADLINE %{rpmcflags}"
+
+cd pdffit/tools
 g77 %{rpmcflags} asc2sbin.f -o asc2sbin
 g77 %{rpmcflags} inp2stru.f -o inp2stru
 g77 %{rpmcflags} sbin2asc.f -o sbin2asc
@@ -70,12 +71,12 @@ g77 %{rpmcflags} sbin2asc.f -o sbin2asc
 %install
 rm -rf $RPM_BUILD_ROOT
 
-cd discus/prog
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
-cd ../../kuplot/prog
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
-cd ../../pdffit/prog
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install -C discus/prog \
+	DESTDIR=$RPM_BUILD_ROOT
+%{__make} install -C kuplot/prog \
+	DESTDIR=$RPM_BUILD_ROOT
+%{__make} install -C pdffit/prog \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
