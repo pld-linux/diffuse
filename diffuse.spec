@@ -6,6 +6,7 @@ License:	Freeware (academic non commercial use)
 Group:		Applications
 URL:		http://www.uni-wuerzburg.de/mineralogie/crystal/discus/discus.html
 Source0:	ftp://www.pa.msu.edu/pub/billinge/discus/Diffuse-%{version}.tar.gz
+# Source0-md5:	8b8eccf17e8c98dfbe1a5738b640bb00
 Patch0:		%{name}-Makefiles.patch
 BuildRequires:	XFree86-devel
 BuildRequires:	pgplot-devel
