@@ -10,14 +10,26 @@ Patch0:		%{name}-Makefiles.patch
 BuildRequires:	XFree86-devel
 BuildRequires:	pgplot-devel
 BuildRequires:	readline-devel
-BuildRoot:      %{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
+
+%package common
+Summary:	Common files for diffuse package
+Summary(pl):	Wspólne pliki pakietu diffuse
+Group:		Applications
+
+%description common
+Common files for diffuse package.
+
+%description common -l pl
+Wspólne pliki pakietu diffuse.
 
 %package discus
 Summary:	Crystal structure simulation and analysis
 Summary(pl):	Symulacja i analiza struktur krystalicznych
 Group:		Applications
+Requires:	%{name}-common = %{version}
 
 %description discus
 DISCUS (DIffuse SCattering and defect strUcture Simulation) is a
@@ -26,9 +38,9 @@ corresponding Fourier transform. The main scope of the program is to
 simulate defect structures and thus diffuse scattering. It can,
 however, be equally well used for the simulation of perfect
 structures, of non crystalline materials and can be used as a very
-efficient tool in the teaching of diffraction physics. 
+efficient tool in the teaching of diffraction physics.
 
-%description discus
+%description discus -l pl
 DISCUS (DIffuse SCattering and defect strUcture Simulation - dyfuzyjne
 rozpraszanie i symulacja uszkodzonej struktury) jest programem
 napisanym w celu symulacji struktur krystalicznych i obliczania
@@ -66,3 +78,14 @@ cd ../../pdffit/prog
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%files common
+%defattr(644,root,root,755)
+%{_datadir}/%{name}/color.map
+%dir %{_datadir}/%{name}/mac
+
+%files discus
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/discus
+%{_datadir}/%{name}/discus.hlp
+%{_datadir}/%{name}/mac/discus
