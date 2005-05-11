@@ -102,6 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files common
 %defattr(644,root,root,755)
+%dir %{_datadir}/%{name}
 %{_datadir}/%{name}/color.map
 %dir %{_datadir}/%{name}/mac
 
