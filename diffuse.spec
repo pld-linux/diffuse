@@ -1,5 +1,5 @@
 Summary:	'Diffuse program' collection
-Summary(pl):	Zestaw 'programów dyfuzji'
+Summary(pl.UTF-8):   Zestaw 'programÃ³w dyfuzji'
 Name:		diffuse
 Version:	4.1b
 Release:	1
@@ -24,30 +24,30 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
            results)
 %endif
 
-%description -l pl
-Zestaw 'programów dyfuzji' zawiera nastêpuj±ce programy:
+%description -l pl.UTF-8
+Zestaw 'programÃ³w dyfuzji' zawiera nastÄ™pujÄ…ce programy:
 - DISCUS - Rozpraszanie dyfuzyjne i symulacja uszkodzonej struktury
 %if 0
 - PDFFIT - Full Profile Refinement of structural model of the Atomic
            Pair Distribution Function
-- KUPLOT - Program do rysowania (dobrze dopasowany do formatu wyników
+- KUPLOT - Program do rysowania (dobrze dopasowany do formatu wynikÃ³w
            DISCUS i PDFFIT)
 %endif
 
 %package common
 Summary:	Common files for diffuse package
-Summary(pl):	Wspólne pliki pakietu diffuse
+Summary(pl.UTF-8):   WspÃ³lne pliki pakietu diffuse
 Group:		Applications
 
 %description common
 Common files for diffuse package.
 
-%description common -l pl
-Wspólne pliki pakietu diffuse.
+%description common -l pl.UTF-8
+WspÃ³lne pliki pakietu diffuse.
 
 %package discus
 Summary:	Crystal structure simulation and analysis
-Summary(pl):	Symulacja i analiza struktur krystalicznych
+Summary(pl.UTF-8):   Symulacja i analiza struktur krystalicznych
 Group:		Applications
 Requires:	%{name}-common = %{version}
 
@@ -60,15 +60,15 @@ however, be equally well used for the simulation of perfect
 structures, of non crystalline materials and can be used as a very
 efficient tool in the teaching of diffraction physics.
 
-%description discus -l pl
+%description discus -l pl.UTF-8
 DISCUS (DIffuse SCattering and defect strUcture Simulation - dyfuzyjne
 rozpraszanie i symulacja uszkodzonej struktury) jest programem
 napisanym w celu symulacji struktur krystalicznych i obliczania
-zwi±zanych z nimi transformat Fouriera. G³ównym zakresem dzia³ania
+zwiÄ…zanych z nimi transformat Fouriera. GÅ‚Ã³wnym zakresem dziaÅ‚ania
 programu jest symulacja uszkodzonych struktur i ich dyfuzyjnego
-rozpraszania. Mimo to program mo¿e byæ u¿ywany tak¿e do symulacji
-idealnych struktur, materia³ów niekrystalicznych, oraz jako wydajne
-narzêdzie do nauki fizyki dyfrakcyjnej.
+rozpraszania. Mimo to program moÅ¼e byÄ‡ uÅ¼ywany takÅ¼e do symulacji
+idealnych struktur, materiaÅ‚Ã³w niekrystalicznych, oraz jako wydajne
+narzÄ™dzie do nauki fizyki dyfrakcyjnej.
 
 %prep
 %setup -q -n Diffuse-%{version}
