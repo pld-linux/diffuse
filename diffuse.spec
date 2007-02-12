@@ -1,5 +1,5 @@
 Summary:	'Diffuse program' collection
-Summary(pl.UTF-8):   Zestaw 'programów dyfuzji'
+Summary(pl.UTF-8):	Zestaw 'programów dyfuzji'
 Name:		diffuse
 Version:	4.1b
 Release:	1
@@ -36,7 +36,7 @@ Zestaw 'programów dyfuzji' zawiera następujące programy:
 
 %package common
 Summary:	Common files for diffuse package
-Summary(pl.UTF-8):   Wspólne pliki pakietu diffuse
+Summary(pl.UTF-8):	Wspólne pliki pakietu diffuse
 Group:		Applications
 
 %description common
@@ -47,7 +47,7 @@ Wspólne pliki pakietu diffuse.
 
 %package discus
 Summary:	Crystal structure simulation and analysis
-Summary(pl.UTF-8):   Symulacja i analiza struktur krystalicznych
+Summary(pl.UTF-8):	Symulacja i analiza struktur krystalicznych
 Group:		Applications
 Requires:	%{name}-common = %{version}
 
